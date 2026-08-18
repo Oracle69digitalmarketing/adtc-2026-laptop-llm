@@ -1,0 +1,6 @@
+[submodule "profiler"]
+	path = profiler
+	url = https://github.com/Africa-Deep-Tech-Foundation/adtc-profiler
+[submodule "tools/llama.cpp"]
+	path = tools/llama.cpp
+	url = https://github.com/ggerganov/llama.cpp
