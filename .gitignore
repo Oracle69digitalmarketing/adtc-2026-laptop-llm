@@ -1,0 +1,42 @@
+# ADTC 2026 Gitignore
+
+# Virtual Environment
+.venv/
+__pycache__/
+*.py[cod]
+*$py.class
+
+# External Tools and Dependencies
+profiler/
+tools/
+
+# Models (CRITICAL: DO NOT COMMIT GGUF)
+models/
+*.gguf
+
+# Binaries and build artifacts
+bin/
+build/
+dist/
+*.so
+*.a
+*.o
+
+# Logs and temporary files
+*.log
+tmp/
+.pytest_cache/
+.ruff_cache/
+.uv-cache/
+
+# Credentials and sensitive info
+.env
+.secrets
+gemini-credentials.json
+.gemini/
+
+# Reports
+submission.json
+audit.json
+verdict.json
+REPORT.md
