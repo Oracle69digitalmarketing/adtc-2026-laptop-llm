@@ -1,0 +1,76 @@
+{
+  "schema_version": "1.1.0",
+  "profiler_version": "adtc-profiler 0.1.0",
+  "submission": {
+    "team_id": "demo-team",
+    "domain": "coding_assistants",
+    "language_scope": [
+      "en"
+    ],
+    "african_alpha_claim": false,
+    "budget_laptop_claim": true,
+    "submitter": {
+      "name": "Adewumi Adewale",
+      "email": "adewaleadewumi78@gmail.com",
+      "github_handle": "oracle69digitalmarketing"
+    },
+    "cross_disciplinary_pairing": {
+      "discipline": "education",
+      "load_bearing": true,
+      "description": "Coding assistant used in classroom settings"
+    },
+    "test_prompts": [
+      {
+        "prompt_id": "tp_001",
+        "prompt": "Write a Python function that reads a CSV file and returns the column with the highest mean value."
+      },
+      {
+        "prompt_id": "tp_002",
+        "prompt": "Explain the difference between a list and a tuple in Python, and give one example where each is the better choice."
+      }
+    ],
+    "model": {
+      "name": "Phi-4-mini-instruct-Q4_K_M",
+      "runtime": "llama.cpp",
+      "quantization": "GGUF Q4_K_M",
+      "parameters_estimate": "3.8B",
+      "packaging": "binary_bundle"
+    }
+  },
+  "environment": {
+    "measured_on": "participant_laptop",
+    "cpu_model": "Intel(R) Xeon(R) CPU @ 2.20GHz",
+    "ram_gb": 7.8,
+    "gpu": "none",
+    "os": "Ubuntu 24.04.4 LTS"
+  },
+  "throughput": {
+    "tokens_per_second_generation": 2.64,
+    "first_token_latency_ms": 82664.44,
+    "prompt_tokens": 512,
+    "generated_tokens": 128
+  },
+  "memory": {
+    "peak_rss_mb": 3812.03,
+    "steady_state_rss_mb": 3698.99,
+    "peak_vms_mb": 4361.71
+  },
+  "accuracy": [],
+  "cpu_thermal": {
+    "cpu_percent_p99": 68.0,
+    "core_temp_c_peak": null,
+    "throttled": false
+  },
+  "reproducibility": {
+    "git_commit_sha": "af0edb6cd564",
+    "docker_image_digest": "unknown",
+    "random_seed": 42
+  },
+  "model_info": {
+    "params_count": 3836021856,
+    "context_length": 131072,
+    "architecture": "phi3",
+    "claimed_params_estimate": "3.8B",
+    "params_match": true
+  }
+}

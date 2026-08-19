@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ADTC Offline Coding Assistant</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: monospace; background: #1a1a2e; color: #e0e0e0; padding: 16px; }
+  h1 { font-size: 18px; color: #0f0; margin-bottom: 8px; }
+  .status-bar { display: flex; gap: 16px; margin-bottom: 16px; font-size: 13px; }
+  .indicator { display: inline-flex; align-items: center; gap: 6px; }
+  .dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+  .dot.on { background: #0f0; }
+  .dot.off { background: #f00; }
+  .dot.wait { background: #ff0; animation: pulse 1s infinite; }
+  @keyframes pulse { 50% { opacity: 0.3; } }
+  #response { background: #0d0d1a; border: 1px solid #333; padding: 12px; min-height: 200px;
+              max-height: 60vh; overflow-y: auto; white-space: pre-wrap; font-size: 14px;
+              margin-bottom: 12px; border-radius: 4px; line-height: 1.5; }
+  .input-row { display: flex; gap: 8px; }
+  #input { flex: 1; background: #0d0d1a; border: 1px solid #333; color: #e0e0e0;
+           padding: 10px; font-family: monospace; font-size: 14px; border-radius: 4px; }
+  #input:focus { outline: none; border-color: #0f0; }
+  button { background: #16213e; color: #0f0; border: 1px solid #0f0; padding: 10px 20px;
+           font-family: monospace; font-size: 14px; cursor: pointer; border-radius: 4px; }
+  button:hover { background: #1a3a5c; }
+  button:disabled { opacity: 0.4; cursor: not-allowed; }
+  .phase { font-size: 11px; color: #666; margin-top: 8px; }
+</style>
+</head>
+<body>
+
+<h1>ADTC Offline Coding Assistant</h1>
+
+<div class="status-bar">
+  <span class="indicator">
+    <span class="dot on" id="offlineDot"></span>
+    <span id="offlineLabel">LOCAL / OFFLINE</span>
+  </span>
+  <span class="indicator">
+    <span class="dot wait" id="modelDot"></span>
+    <span id="modelLabel">Model: checking...</span>
+  </span>
+</div>
+
+<div id="response"></div>
+
+<div class="input-row">
+  <input id="input" type="text" placeholder="Type a message..." autocomplete="off" />
+  <button id="sendBtn" onclick="send()">Send</button>
+</div>
+
+<div class="phase">Phase 1 - Minimal Test Page</div>
+
+<script>
+const responseEl = document.getElementById('response');
+const inputEl = document.getElementById('input');
+const sendBtn = document.getElementById('sendBtn');
+const modelDot = document.getElementById('modelDot');
+const modelLabel = document.getElementById('modelLabel');
+
+let modelReady = false;
+
+async function checkStatus() {
+  try {
+    const resp = await fetch('/api/status');
+    const data = await resp.json();
+    if (data.llama_server) {
+      modelDot.className = 'dot on';
+      modelLabel.textContent = 'Model: ' + data.model + ' (ready)';
+      modelReady = true;
+    } else {
+      modelDot.className = 'dot off';
+      modelLabel.textContent = 'Model: ' + data.llama_status;
+      modelReady = false;
+    }
+  } catch (e) {
+    modelDot.className = 'dot off';
+    modelLabel.textContent = 'Model: unreachable';
+    modelReady = false;
+  }
+}
+
+async function send() {
+  const text = inputEl.value.trim();
+  if (!text || !modelReady) return;
+
+  sendBtn.disabled = true;
+  inputEl.value = '';
+  responseEl.textContent = '';
+
+  try {
+    const resp = await fetch('/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        messages: [{ role: 'user', content: text }],
+        stream: true,
+      }),
+    });
+
+    const reader = resp.body.getReader();
+    const decoder = new TextDecoder();
+    let buffer = '';
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+
+      buffer += decoder.decode(value, { stream: true });
+      const lines = buffer.split('\n');
+      buffer = lines.pop();
+
+      for (const line of lines) {
+        if (line.startsWith('data: ')) {
+          const data = line.slice(6).trim();
+          if (data === '[DONE]') continue;
+          try {
+            const parsed = JSON.parse(data);
+            const delta = parsed.choices?.[0]?.delta?.content;
+            if (delta) responseEl.textContent += delta;
+          } catch (e) { /* skip malformed */ }
+        }
+      }
+    }
+
+    responseEl.textContent += '\n';
+  } catch (e) {
+    responseEl.textContent = 'Error: ' + e.message;
+  } finally {
+    sendBtn.disabled = false;
+    inputEl.focus();
+  }
+}
+
+inputEl.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') send();
+});
+
+checkStatus();
+setInterval(checkStatus, 10000);
+</script>
+
+</body>
+</html>

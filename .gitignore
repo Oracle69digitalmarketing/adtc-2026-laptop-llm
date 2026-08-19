@@ -6,21 +6,17 @@ __pycache__/
 *.py[cod]
 *$py.class
 
-# External Tools and Dependencies
-profiler/
+# llama.cpp source (prebuilt binaries are in bin/; source not needed)
 tools/
 
-# Models (CRITICAL: DO NOT COMMIT GGUF)
+# Models (CRITICAL: DO NOT COMMIT GGUF — 2.48 GB exceeds GitHub 100 MB limit)
 models/
 *.gguf
 
-# Binaries and build artifacts
-bin/
+# Build artifacts
 build/
 dist/
-*.so
-*.a
-*.o
+*.egg-info/
 
 # Logs and temporary files
 *.log
@@ -35,8 +31,9 @@ tmp/
 gemini-credentials.json
 .gemini/
 
-# Reports
-submission.json
+# Generated audit artifacts (created by profiler, not committed)
 audit.json
 verdict.json
-REPORT.md
+
+# Runtime
+profiler-run.log
