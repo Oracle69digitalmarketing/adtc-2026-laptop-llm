@@ -2,7 +2,7 @@
   "schema_version": "1.1.0",
   "profiler_version": "adtc-profiler 0.1.0",
   "submission": {
-    "team_id": "demo-team",
+    "team_id": "offline-coding-assistant-for-african-laptops",
     "domain": "coding_assistants",
     "language_scope": [
       "en"
@@ -30,47 +30,56 @@
       }
     ],
     "model": {
-      "name": "Phi-4-mini-instruct-Q4_K_M",
+      "name": "SmolLM2-135M-Instruct-Q4_K_M",
       "runtime": "llama.cpp",
       "quantization": "GGUF Q4_K_M",
-      "parameters_estimate": "3.8B",
+      "parameters_estimate": "135M",
       "packaging": "binary_bundle"
     }
   },
   "environment": {
     "measured_on": "participant_laptop",
-    "cpu_model": "Intel(R) Xeon(R) CPU @ 2.20GHz",
-    "ram_gb": 7.8,
+    "cpu_model": "aarch64",
+    "ram_gb": 7.5,
     "gpu": "none",
     "os": "Ubuntu 24.04.4 LTS"
   },
   "throughput": {
-    "tokens_per_second_generation": 2.64,
-    "first_token_latency_ms": 82664.44,
+    "tokens_per_second_generation": 25.58,
+    "first_token_latency_ms": 8941.51,
     "prompt_tokens": 512,
     "generated_tokens": 128
   },
   "memory": {
-    "peak_rss_mb": 3812.03,
-    "steady_state_rss_mb": 3698.99,
-    "peak_vms_mb": 4361.71
+    "peak_rss_mb": 175.12,
+    "steady_state_rss_mb": 110.35,
+    "peak_vms_mb": 11331.53
   },
-  "accuracy": [],
+  "accuracy": [
+    {
+      "benchmark": "arc_easy",
+      "dataset_version": "lm-eval-harness",
+      "language": "en",
+      "samples": 50,
+      "score": 0.46,
+      "metric": "acc_norm"
+    }
+  ],
   "cpu_thermal": {
-    "cpu_percent_p99": 68.0,
+    "cpu_percent_p99": 0.0,
     "core_temp_c_peak": null,
     "throttled": false
   },
   "reproducibility": {
-    "git_commit_sha": "af0edb6cd564",
+    "git_commit_sha": "7377fb3d0804",
     "docker_image_digest": "unknown",
     "random_seed": 42
   },
   "model_info": {
-    "params_count": 3836021856,
-    "context_length": 131072,
-    "architecture": "phi3",
-    "claimed_params_estimate": "3.8B",
+    "params_count": 134515008,
+    "context_length": 8192,
+    "architecture": "llama",
+    "claimed_params_estimate": "135M",
     "params_match": true
   }
 }
