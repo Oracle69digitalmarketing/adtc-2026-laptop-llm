@@ -194,3 +194,27 @@ The final ADTC benchmark results establish the measured performance of this conf
 ---
 
 *This report is submitted as part of the Africa Deep Tech Challenge (ADTC) 2026.*
+
+## Supplementary ARM64 Mobile Validation
+
+Because the primary target environment is an ARM64 laptop, we additionally validated that the same SmolLM2-135M-Instruct Q4_K_M GGUF model can run on an ARM64 Android device using Termux and an ARM64-native llama.cpp build.
+
+These measurements are supplementary and are **not** used as the participant-laptop benchmark.
+
+| Metric | Prompt 1 | Prompt 2 | Average |
+|---|---:|---:|---:|
+| Generation speed (tokens/s) | 32.86 | 32.67 | 32.77 |
+| Prompt evaluation (tokens/s) | 99.94 | 101.63 | 100.79 |
+| Total execution time (s) | 1.492 | 1.486 | 1.489 |
+
+### Mobile validation environment
+
+- Architecture: ARM64 / aarch64
+- Platform: Android
+- Runtime environment: Termux
+- Runtime: ARM64-native llama.cpp
+- Model: SmolLM2-135M-Instruct-Q4_K_M
+- Quantization: GGUF Q4_K_M
+- CPU-only execution
+
+The mobile measurements demonstrate portability of the model and runtime to constrained ARM64 devices. They are presented separately from the participant-laptop measurements and do not replace the required laptop benchmark.
