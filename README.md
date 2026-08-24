@@ -1,5 +1,3 @@
-Yes. The previous version had formatting artifacts from the chat rendering. Use this clean GitHub Markdown version. Copy everything inside the block directly into README.md.
-
 # Offline Coding Assistant for African Laptops
 
 > **ADTC 2026 · Coding Assistants · Offline / Edge AI**
@@ -404,5 +402,3 @@ Oracle69digitalmarketing
 Oracle69 Systems
 
 GitHub
-
-**One important point:** this README deliberately presents the **phone results as supplementary validation**, while keeping the official ADTC laptop scores separate. That's the right framing for the judges and avoids accidentally implying that the phone benchmark is your participant score.
