@@ -1,31 +1,376 @@
-# ADTC 2026 Laptop LLM Challenge
+Offline Coding Assistant for African Laptops
 
-This repository contains the development environment and submission artifacts for the Africa Deep Tech Challenge 2026.
+«ADTC 2026 · Coding Assistants · Offline / Edge AI»
 
-## Workspace Structure
+A reproducible local AI coding-assistant configuration designed for constrained hardware: approximately 8 GB laptops, CPU-only inference, and environments where reliable cloud connectivity cannot be assumed.
 
-- `app/`: Final application code.
-- `benchmarks/`: Local benchmark results.
-- `docs/`: Project documentation.
-- `models/`: GGUF model files (Gitignored).
-- `scripts/`: Utility scripts.
-- `submission/`: Final submission artifacts.
-- `tools/`: Build tools (llama.cpp).
-- `profiler/`: Official ADTC profiler repository.
+The project combines a compact instruction-tuned GGUF model with llama.cpp to provide local coding assistance without sending prompts or source code to a cloud inference API.
 
-## Getting Started
+---
 
-1. Activate the virtual environment:
-   ```bash
-   source .venv/bin/activate
-   ```
-2. Ensure `bin/` is on your `PATH`:
-   ```bash
-   export PATH=$PWD/bin:$PATH
-   ```
-3. Run the profiler:
-   ```bash
-   adtc-profiler run --submission . --mode participant --output submission.json
-   ```
+Why This Project
 
-For detailed environment information, see [docs/environment.md](docs/environment.md).
+AI coding tools are increasingly useful, but many students and developers work with:
+
+- Modest laptops with limited RAM
+- CPU-only hardware and no discrete GPU
+- Unreliable or expensive internet connectivity
+- Privacy requirements that make cloud inference undesirable
+- Limited access to high-performance computing hardware
+
+This project explores a practical alternative:
+
+«Put the model on the device and run the assistant locally.»
+
+The primary competition target is an approximately 8 GB laptop.
+
+We also validated the same compact model on an ARM64 Android phone through Termux. This mobile test is supplementary and does not replace the required ADTC laptop benchmark.
+
+---
+
+What We Built
+
+The project packages a compact local language model with an efficient inference runtime to create an offline coding-assistance configuration.
+
+The system is designed around:
+
+1. A small instruction-tuned language model
+2. GGUF quantization
+3. CPU-based inference
+4. llama.cpp as the inference runtime
+5. Reproducible benchmarking through the official ADTC profiler
+6. Local execution without a cloud inference API
+
+The result is a configuration that can run on constrained computers and, with an ARM64-native runtime, even on a phone.
+
+---
+
+Final Model
+
+Component| Configuration
+Model| SmolLM2-135M-Instruct
+Parameters| ~135M
+Quantization| GGUF Q4_K_M
+Model size| ~100 MiB
+Runtime| llama.cpp
+Primary target| ~8 GB CPU-only laptops
+Additional validation| ARM64 Android + Termux
+Inference| CPU-only
+
+The model is deliberately small.
+
+The objective isn't maximum model size. It is finding a useful operating point where an AI model remains deployable on hardware that users may already have.
+
+---
+
+ADTC Benchmark
+
+The final participant configuration was evaluated with the official ADTC participant profiler.
+
+Submitted scores
+
+Metric| Score
+Self-reported Performance Score (Sperf)| 17.60
+Self-reported Efficiency Score (Seff)| 46.82
+
+The complete benchmark methodology and environment are documented in:
+
+"submission/REPORT.md"
+
+Accuracy was not claimed where it was not measured.
+
+---
+
+Supplementary ARM64 Mobile Validation
+
+We additionally built an ARM64-native llama.cpp runtime on Android using Termux and ran the same SmolLM2-135M-Instruct Q4_K_M model.
+
+These measurements are supplementary and are not used as the participant-laptop benchmark.
+
+Metric| Prompt 1| Prompt 2| Average
+Generation speed| 32.86 tok/s| 32.67 tok/s| 32.77 tok/s
+Prompt evaluation| 99.94 tok/s| 101.63 tok/s| 100.79 tok/s
+Total execution time| 1.492 s| 1.486 s| 1.489 s
+
+Mobile validation environment
+
+- Architecture: ARM64 / aarch64
+- Platform: Android
+- Runtime environment: Termux
+- Runtime: ARM64-native llama.cpp
+- Model: SmolLM2-135M-Instruct Q4_K_M
+- Quantization: GGUF Q4_K_M
+- Execution: CPU-only
+
+This provides a useful portability signal:
+
+«The same compact model can operate on a phone-class ARM64 device, not only on the target laptop environment.»
+
+The laptop remains the primary ADTC target. The Android deployment demonstrates that the model can be taken further down the hardware stack.
+
+---
+
+Download the Model
+
+The model binary is intentionally not committed to Git because it is a large binary artifact.
+
+Instead, the repository provides a reproducible download script.
+
+From the repository root:
+
+cd submission
+chmod +x download_model.sh
+./download_model.sh
+
+The script downloads:
+
+SmolLM2-135M-Instruct-Q4_K_M.gguf
+
+and places it at:
+
+submission/model/SmolLM2-135M-Instruct-Q4_K_M.gguf
+
+The download is idempotent. If the model already exists, the script skips the download.
+
+---
+
+Android / Termux
+
+The same model can be downloaded and used on an Android ARM64 device.
+
+Install the basic tools:
+
+pkg update
+pkg install git curl
+
+Clone the repository:
+
+git clone https://github.com/Oracle69digitalmarketing/adtc-2026-laptop-llm.git
+cd adtc-2026-laptop-llm
+
+Download the model:
+
+cd submission
+chmod +x download_model.sh
+./download_model.sh
+
+The resulting GGUF model can be used with an ARM64-native llama.cpp build.
+
+Important
+
+The Android deployment does not require a separate phone-specific model.
+
+The project uses the same compact GGUF model for both:
+
+- Laptop deployment
+- ARM64 Android deployment
+
+This keeps the distribution simple and demonstrates model portability rather than maintaining separate model variants.
+
+---
+
+Run Locally
+
+After obtaining an appropriate native llama.cpp build:
+
+./llama-cli \
+  -m submission/model/SmolLM2-135M-Instruct-Q4_K_M.gguf \
+  -p "Explain the difference between a Python list and tuple." \
+  -n 128
+
+On Android/Termux, use an ARM64-native llama.cpp executable.
+
+The runtime and model are both local.
+
+No cloud inference API is required for the core workflow.
+
+---
+
+Reproduce the ADTC Benchmark
+
+Activate the project environment:
+
+source .venv/bin/activate
+export PATH=$PWD/bin:$PATH
+
+Run the participant profiler:
+
+adtc-profiler run \
+  --submission . \
+  --mode participant \
+  --output submission.json
+
+The resulting benchmark output can be inspected in:
+
+submission.json
+
+The profiler implementation and tests are included under:
+
+profiler/
+
+---
+
+Repository Structure
+
+.
+├── app/                         # Application/integration code
+├── docs/                        # Environment and project documentation
+├── profiler/                   # ADTC profiler source and tests
+├── scripts/                    # Utility scripts
+├── submission/                 # Final submission package
+│   ├── model/                  # Downloaded GGUF model location
+│   ├── metadata.json           # Submission metadata
+│   ├── REPORT.md               # Full technical report
+│   └── download_model.sh       # Reproducible model download script
+├── bin/                        # Runtime binaries
+├── models/                     # Local benchmark models
+├── REPORT.md                   # Project-level report
+└── submission.json             # Profiler output
+
+---
+
+Design Principles
+
+1. Offline First
+
+The core inference workflow runs locally.
+
+It does not require a cloud inference API or continuous internet connectivity once the model and runtime are available on the device.
+
+This makes the approach relevant to environments where connectivity is intermittent, expensive, or unavailable.
+
+---
+
+2. Constrained Hardware First
+
+The model is intentionally compact and quantized.
+
+The goal is to reduce the hardware barrier to local AI rather than assume access to:
+
+- Dedicated GPUs
+- Large amounts of RAM
+- High-end workstations
+- Persistent cloud connectivity
+
+---
+
+3. Reproducible Measurement
+
+Performance claims are based on measured profiler output rather than estimates of what the hardware should theoretically achieve.
+
+The project includes the benchmark environment and supporting tooling needed to reproduce the participant measurement.
+
+---
+
+4. Device Portability
+
+The laptop is the primary ADTC target.
+
+The additional Android/Termux validation demonstrates that the same model can also be deployed to smaller ARM64 devices.
+
+This creates a broader deployment path:
+
+8 GB Laptop
+     │
+     │ same compact GGUF model
+     ▼
+ARM64 Android Phone
+
+The phone result is not presented as the official laptop benchmark. It is evidence that the model/runtime combination can operate beyond the competition's primary target environment.
+
+---
+
+Why the Phone Result Matters
+
+The project started from a laptop constraint, but the mobile validation revealed a broader opportunity.
+
+If a model designed for constrained laptop inference can also run effectively on an ARM64 phone, the deployment boundary becomes significantly more flexible.
+
+Potential environments include:
+
+- Student laptops
+- School computer laboratories
+- Community technology centres
+- Developer workstations
+- Low-cost PCs
+- Android phones
+- Offline field environments
+
+This is particularly relevant in markets where users may have access to smartphones before they have access to powerful computers.
+
+The project therefore explores a broader principle:
+
+«Useful AI shouldn't always require new hardware.»
+
+---
+
+Limitations
+
+This is a constrained-device research and competition prototype, not a replacement for frontier cloud coding assistants.
+
+Smaller models have lower reasoning and coding capability, while CPU-only inference introduces latency on weaker hardware.
+
+The project also does not claim that every coding workload can be handled effectively by a 135M-parameter model.
+
+The focus is different:
+
+«Useful local AI assistance when hardware, connectivity, privacy, or cost constraints make cloud inference impractical.»
+
+---
+
+What's Next
+
+The current implementation establishes the benchmarked local inference configuration.
+
+The next stage is to improve the practical coding-assistant experience around the model while preserving the core constraint of local execution.
+
+Potential improvements include:
+
+- Better prompt handling
+- Code-context management
+- Retrieval of local project files
+- Lightweight editor integration
+- Improved conversation handling
+- Runtime optimization
+- Model comparison across constrained devices
+- More extensive coding-task accuracy evaluation
+- Android-focused packaging
+- Offline developer workflows for schools and community environments
+
+The long-term direction is not simply to make a smaller chatbot.
+
+It is to build practical edge AI development tools for hardware-constrained environments.
+
+---
+
+Full Technical Report
+
+For the complete technical report, benchmark methodology, environment details, and supplementary mobile validation:
+
+submission/REPORT.md
+
+GitHub:
+
+https://github.com/Oracle69digitalmarketing/adtc-2026-laptop-llm/blob/main/submission/REPORT.md
+
+---
+
+Competition
+
+Built for the:
+
+Africa Deep Tech Challenge 2026 — Laptop LLM Challenge
+
+Problem Domain: Coding Assistants
+
+---
+
+Maintainer
+
+Oracle69digitalmarketing
+
+Oracle69 Systems
+
+GitHub:
+
+https://github.com/Oracle69digitalmarketing
