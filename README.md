@@ -1,14 +1,16 @@
-Offline Coding Assistant for African Laptops
+Yes. The previous version had formatting artifacts from the chat rendering. Use this clean GitHub Markdown version. Copy everything inside the block directly into README.md.
 
-«ADTC 2026 · Coding Assistants · Offline / Edge AI»
+# Offline Coding Assistant for African Laptops
+
+> **ADTC 2026 · Coding Assistants · Offline / Edge AI**
 
 A reproducible local AI coding-assistant configuration designed for constrained hardware: approximately 8 GB laptops, CPU-only inference, and environments where reliable cloud connectivity cannot be assumed.
 
-The project combines a compact instruction-tuned GGUF model with llama.cpp to provide local coding assistance without sending prompts or source code to a cloud inference API.
+The project combines a compact instruction-tuned GGUF model with **llama.cpp** to provide local coding assistance without sending prompts or source code to a cloud inference API.
 
 ---
 
-Why This Project
+## Why This Project
 
 AI coding tools are increasingly useful, but many students and developers work with:
 
@@ -20,15 +22,15 @@ AI coding tools are increasingly useful, but many students and developers work w
 
 This project explores a practical alternative:
 
-«Put the model on the device and run the assistant locally.»
+> **Put the model on the device and run the assistant locally.**
 
 The primary competition target is an approximately 8 GB laptop.
 
-We also validated the same compact model on an ARM64 Android phone through Termux. This mobile test is supplementary and does not replace the required ADTC laptop benchmark.
+We also validated the same compact model on an **ARM64 Android phone through Termux**. This mobile test is supplementary and does not replace the required ADTC laptop benchmark.
 
 ---
 
-What We Built
+## What We Built
 
 The project packages a compact local language model with an efficient inference runtime to create an offline coding-assistance configuration.
 
@@ -45,17 +47,18 @@ The result is a configuration that can run on constrained computers and, with an
 
 ---
 
-Final Model
+## Final Model
 
-Component| Configuration
-Model| SmolLM2-135M-Instruct
-Parameters| ~135M
-Quantization| GGUF Q4_K_M
-Model size| ~100 MiB
-Runtime| llama.cpp
-Primary target| ~8 GB CPU-only laptops
-Additional validation| ARM64 Android + Termux
-Inference| CPU-only
+| Component | Configuration |
+|---|---|
+| **Model** | SmolLM2-135M-Instruct |
+| **Parameters** | ~135M |
+| **Quantization** | GGUF Q4_K_M |
+| **Model size** | ~100 MiB |
+| **Runtime** | llama.cpp |
+| **Primary target** | ~8 GB CPU-only laptops |
+| **Additional validation** | ARM64 Android + Termux |
+| **Inference** | CPU-only |
 
 The model is deliberately small.
 
@@ -63,54 +66,54 @@ The objective isn't maximum model size. It is finding a useful operating point w
 
 ---
 
-ADTC Benchmark
+## ADTC Benchmark
 
 The final participant configuration was evaluated with the official ADTC participant profiler.
 
-Submitted scores
+### Submitted Scores
 
-Metric| Score
-Self-reported Performance Score (Sperf)| 17.60
-Self-reported Efficiency Score (Seff)| 46.82
+| Metric | Score |
+|---|---:|
+| **Self-reported Performance Score (Sperf)** | **17.60** |
+| **Self-reported Efficiency Score (Seff)** | **46.82** |
 
-The complete benchmark methodology and environment are documented in:
-
-"submission/REPORT.md"
+The complete benchmark methodology and environment are documented in [`submission/REPORT.md`](submission/REPORT.md).
 
 Accuracy was not claimed where it was not measured.
 
 ---
 
-Supplementary ARM64 Mobile Validation
+## Supplementary ARM64 Mobile Validation
 
-We additionally built an ARM64-native llama.cpp runtime on Android using Termux and ran the same SmolLM2-135M-Instruct Q4_K_M model.
+We additionally built an **ARM64-native llama.cpp runtime on Android using Termux** and ran the same SmolLM2-135M-Instruct Q4_K_M model.
 
-These measurements are supplementary and are not used as the participant-laptop benchmark.
+These measurements are supplementary and are **not** used as the participant-laptop benchmark.
 
-Metric| Prompt 1| Prompt 2| Average
-Generation speed| 32.86 tok/s| 32.67 tok/s| 32.77 tok/s
-Prompt evaluation| 99.94 tok/s| 101.63 tok/s| 100.79 tok/s
-Total execution time| 1.492 s| 1.486 s| 1.489 s
+| Metric | Prompt 1 | Prompt 2 | Average |
+|---|---:|---:|---:|
+| **Generation speed** | 32.86 tok/s | 32.67 tok/s | **32.77 tok/s** |
+| **Prompt evaluation** | 99.94 tok/s | 101.63 tok/s | **100.79 tok/s** |
+| **Total execution time** | 1.492 s | 1.486 s | **1.489 s** |
 
-Mobile validation environment
+### Mobile Environment
 
-- Architecture: ARM64 / aarch64
-- Platform: Android
-- Runtime environment: Termux
-- Runtime: ARM64-native llama.cpp
-- Model: SmolLM2-135M-Instruct Q4_K_M
-- Quantization: GGUF Q4_K_M
-- Execution: CPU-only
+- **Architecture:** ARM64 / aarch64
+- **Platform:** Android
+- **Runtime environment:** Termux
+- **Runtime:** ARM64-native llama.cpp
+- **Model:** SmolLM2-135M-Instruct Q4_K_M
+- **Quantization:** GGUF Q4_K_M
+- **Execution:** CPU-only
 
 This provides a useful portability signal:
 
-«The same compact model can operate on a phone-class ARM64 device, not only on the target laptop environment.»
+> **The same compact model can operate on a phone-class ARM64 device, not only on the target laptop environment.**
 
 The laptop remains the primary ADTC target. The Android deployment demonstrates that the model can be taken further down the hardware stack.
 
 ---
 
-Download the Model
+## Download the Model
 
 The model binary is intentionally not committed to Git because it is a large binary artifact.
 
@@ -118,6 +121,7 @@ Instead, the repository provides a reproducible download script.
 
 From the repository root:
 
+```bash
 cd submission
 chmod +x download_model.sh
 ./download_model.sh
@@ -131,6 +135,7 @@ and places it at:
 submission/model/SmolLM2-135M-Instruct-Q4_K_M.gguf
 
 The download is idempotent. If the model already exists, the script skips the download.
+
 
 ---
 
@@ -156,16 +161,19 @@ chmod +x download_model.sh
 
 The resulting GGUF model can be used with an ARM64-native llama.cpp build.
 
-Important
+One Model, Multiple Devices
 
 The Android deployment does not require a separate phone-specific model.
 
-The project uses the same compact GGUF model for both:
+The project uses the same compact GGUF model for:
 
-- Laptop deployment
-- ARM64 Android deployment
+Laptop deployment
+
+ARM64 Android deployment
+
 
 This keeps the distribution simple and demonstrates model portability rather than maintaining separate model variants.
+
 
 ---
 
@@ -183,6 +191,7 @@ On Android/Termux, use an ARM64-native llama.cpp executable.
 The runtime and model are both local.
 
 No cloud inference API is required for the core workflow.
+
 
 ---
 
@@ -208,6 +217,7 @@ The profiler implementation and tests are included under:
 
 profiler/
 
+
 ---
 
 Repository Structure
@@ -227,6 +237,7 @@ Repository Structure
 ├── REPORT.md                   # Project-level report
 └── submission.json             # Profiler output
 
+
 ---
 
 Design Principles
@@ -239,28 +250,26 @@ It does not require a cloud inference API or continuous internet connectivity on
 
 This makes the approach relevant to environments where connectivity is intermittent, expensive, or unavailable.
 
----
-
 2. Constrained Hardware First
 
 The model is intentionally compact and quantized.
 
 The goal is to reduce the hardware barrier to local AI rather than assume access to:
 
-- Dedicated GPUs
-- Large amounts of RAM
-- High-end workstations
-- Persistent cloud connectivity
+Dedicated GPUs
 
----
+Large amounts of RAM
+
+High-end workstations
+
+Persistent cloud connectivity
+
 
 3. Reproducible Measurement
 
 Performance claims are based on measured profiler output rather than estimates of what the hardware should theoretically achieve.
 
 The project includes the benchmark environment and supporting tooling needed to reproduce the participant measurement.
-
----
 
 4. Device Portability
 
@@ -272,11 +281,12 @@ This creates a broader deployment path:
 
 8 GB Laptop
      │
-     │ same compact GGUF model
+     │ Same compact GGUF model
      ▼
 ARM64 Android Phone
 
 The phone result is not presented as the official laptop benchmark. It is evidence that the model/runtime combination can operate beyond the competition's primary target environment.
+
 
 ---
 
@@ -288,19 +298,29 @@ If a model designed for constrained laptop inference can also run effectively on
 
 Potential environments include:
 
-- Student laptops
-- School computer laboratories
-- Community technology centres
-- Developer workstations
-- Low-cost PCs
-- Android phones
-- Offline field environments
+Student laptops
+
+School computer laboratories
+
+Community technology centres
+
+Developer workstations
+
+Low-cost PCs
+
+Android phones
+
+Offline field environments
+
 
 This is particularly relevant in markets where users may have access to smartphones before they have access to powerful computers.
 
 The project therefore explores a broader principle:
 
-«Useful AI shouldn't always require new hardware.»
+> Useful AI shouldn't always require new hardware.
+
+
+
 
 ---
 
@@ -314,7 +334,10 @@ The project also does not claim that every coding workload can be handled effect
 
 The focus is different:
 
-«Useful local AI assistance when hardware, connectivity, privacy, or cost constraints make cloud inference impractical.»
+> Useful local AI assistance when hardware, connectivity, privacy, or cost constraints make cloud inference impractical.
+
+
+
 
 ---
 
@@ -326,20 +349,31 @@ The next stage is to improve the practical coding-assistant experience around th
 
 Potential improvements include:
 
-- Better prompt handling
-- Code-context management
-- Retrieval of local project files
-- Lightweight editor integration
-- Improved conversation handling
-- Runtime optimization
-- Model comparison across constrained devices
-- More extensive coding-task accuracy evaluation
-- Android-focused packaging
-- Offline developer workflows for schools and community environments
+Better prompt handling
+
+Code-context management
+
+Retrieval of local project files
+
+Lightweight editor integration
+
+Improved conversation handling
+
+Runtime optimization
+
+Model comparison across constrained devices
+
+More extensive coding-task accuracy evaluation
+
+Android-focused packaging
+
+Offline developer workflows for schools and community environments
+
 
 The long-term direction is not simply to make a smaller chatbot.
 
 It is to build practical edge AI development tools for hardware-constrained environments.
+
 
 ---
 
@@ -347,11 +381,8 @@ Full Technical Report
 
 For the complete technical report, benchmark methodology, environment details, and supplementary mobile validation:
 
-submission/REPORT.md
+View the full technical report
 
-GitHub:
-
-https://github.com/Oracle69digitalmarketing/adtc-2026-laptop-llm/blob/main/submission/REPORT.md
 
 ---
 
@@ -363,6 +394,7 @@ Africa Deep Tech Challenge 2026 — Laptop LLM Challenge
 
 Problem Domain: Coding Assistants
 
+
 ---
 
 Maintainer
@@ -371,6 +403,6 @@ Oracle69digitalmarketing
 
 Oracle69 Systems
 
-GitHub:
+GitHub
 
-https://github.com/Oracle69digitalmarketing
+**One important point:** this README deliberately presents the **phone results as supplementary validation**, while keeping the official ADTC laptop scores separate. That's the right framing for the judges and avoids accidentally implying that the phone benchmark is your participant score.
