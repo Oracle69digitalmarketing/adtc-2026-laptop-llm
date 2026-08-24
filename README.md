@@ -395,10 +395,10 @@ Problem Domain: Coding Assistants
 
 ---
 
-Maintainer
+## Maintainer
 
-Oracle69digitalmarketing
+**Oracle69digitalmarketing**
 
-Oracle69 Systems
+**Oracle69 Systems**
 
-GitHub
+[GitHub](https://github.com/Oracle69digitalmarketing)
