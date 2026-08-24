@@ -1,7 +1,9 @@
 {
-  "team_id": "demo-team",
+  "team_id": "offline-coding-assistant-for-african-laptops",
   "domain": "coding_assistants",
-  "language_scope": ["en"],
+  "language_scope": [
+    "en"
+  ],
   "african_alpha_claim": false,
   "budget_laptop_claim": true,
   "submitter": {
@@ -25,13 +27,13 @@
     }
   ],
   "model": {
-    "name": "Phi-4-mini-instruct-Q4_K_M",
+    "name": "SmolLM2-135M-Instruct-Q4_K_M",
     "runtime": "llama.cpp",
     "quantization": "GGUF Q4_K_M",
-    "parameters_estimate": "3.8B",
+    "parameters_estimate": "135M",
     "packaging": "binary_bundle"
   },
   "_runtime": {
-    "model_path": "/home/adewumioluwatoyin09/adtc-2026/models/microsoft_Phi-4-mini-instruct-Q4_K_M.gguf"
+    "model_path": "model/SmolLM2-135M-Instruct-Q4_K_M.gguf"
   }
 }
